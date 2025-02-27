@@ -81,7 +81,7 @@ def process_ffmpeg_compose(data, job_id, webhook_url, record_id):
     output_filenames = []
 
     # Build FFmpeg command
-    command = ["C:\\ProgramData\\chocolatey\\lib\\ffmpeg\\tools\\ffmpeg\\bin\\ffmpeg"]
+    command = ["ffmpeg"]
 
     # Add global options
     for option in data.get("global_options", []):

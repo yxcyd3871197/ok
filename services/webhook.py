@@ -4,6 +4,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+import urllib.parse
+
 def trigger_webhook(webhook_url, record_id, data):
     """
     Triggers a webhook with the given URL, record ID, and data.
@@ -12,8 +14,13 @@ def trigger_webhook(webhook_url, record_id, data):
         logger.warning("Webhook URL is not provided. Skipping webhook trigger.")
         return
 
+    # Extract record_id from webhook_url if it exists
+    parsed_url = urllib.parse.urlparse(webhook_url)
+    query_params = urllib.parse.parse_qs(parsed_url.query)
+    record_id_from_url = query_params.get('record_id', [None])[0]
+
     payload = {
-        "record_id": record_id,
+        "record_id": record_id_from_url or record_id,  # Use record_id from URL if available, otherwise use the provided record_id
         "data": data
     }
 
