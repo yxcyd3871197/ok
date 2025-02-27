@@ -43,7 +43,7 @@ def create_app():
                 "build_number": BUILD_NUMBER  # Add build number to response
             }
 
-            trigger_webhook(data.get("webhook_url"), data.get("id"), response_data)
+            trigger_webhook(data.get("webhook_url"), data.get("id"), [response_data])
 
             task_queue.task_done()
 
