@@ -34,7 +34,7 @@ def get_metadata(filename, metadata_requests, job_id, record_id):
     if metadata_requests.get('thumbnail'):
         thumbnail_filename = f"{os.path.splitext(filename)[0]}_thumbnail.jpg"
         thumbnail_command = [
-            'ffmpeg',
+            '/usr/local/bin/ffmpeg',
             '-i', filename,
             '-vf', 'select=eq(n\,0)',
             '-vframes', '1',
@@ -52,7 +52,7 @@ def get_metadata(filename, metadata_requests, job_id, record_id):
 
     if metadata_requests.get('encoder') or metadata_requests.get('duration') or metadata_requests.get('bitrate'):
         ffprobe_command = [
-            'ffprobe',
+            '/usr/local/bin/ffprobe',
             '-v', 'quiet',
             '-print_format', 'json',
             '-show_format',
