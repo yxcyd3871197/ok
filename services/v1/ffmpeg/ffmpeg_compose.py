@@ -81,7 +81,7 @@ def process_ffmpeg_compose(data, job_id, webhook_url, record_id):
     output_filenames = []
 
     # Build FFmpeg command
-    command = ["ffmpeg"]
+    command = ["C:\\ProgramData\\chocolatey\\lib\\ffmpeg\\tools\\ffmpeg\\bin\\ffmpeg"]
 
     # Add global options
     for option in data.get("global_options", []):
@@ -124,9 +124,10 @@ def process_ffmpeg_compose(data, job_id, webhook_url, record_id):
 
     # Execute FFmpeg command
     try:
+        print(f"Executing FFmpeg command: {' '.join(command)}")
         subprocess.run(command, check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
-        raise Exception(f"FFmpeg command failed: {e.stderr}")
+        raise Exception(f"FFmpeg command failed: {e.stderr} Command: {' '.join(command)}")
 
     # Clean up input files
     for input_data in data["inputs"]:
