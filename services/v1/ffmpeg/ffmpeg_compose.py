@@ -124,8 +124,10 @@ def process_ffmpeg_compose(data, job_id, webhook_url, record_id):
 
     # Execute FFmpeg command
     try:
-        print(f"Executing FFmpeg command: {' '.join(command)}")
-        subprocess.run(command, check=True, capture_output=True, text=True)
+        logger.info(f"Executing FFmpeg command: {' '.join(command)}")
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        logger.info(f"FFmpeg command output: {result.stdout}")
+        logger.error(f"FFmpeg command error: {result.stderr}")
     except subprocess.CalledProcessError as e:
         raise Exception(f"FFmpeg command failed: {e.stderr} Command: {' '.join(command)}")
 
