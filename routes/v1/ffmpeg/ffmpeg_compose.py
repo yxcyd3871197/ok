@@ -98,8 +98,11 @@ logger = logging.getLogger(__name__)
 def ffmpeg_api(job_id, data):
     logger.info(f"Job {job_id}: Received flexible FFmpeg request")
 
+    webhook_url = data.get("webhook_url")
+    record_id = data.get("id")
+
     try:
-        output_filenames, metadata = process_ffmpeg_compose(data, job_id)
+        output_filenames, metadata = process_ffmpeg_compose(data, job_id, webhook_url, record_id)
         
         # Upload output files to GCP and create result array
         output_urls = []
@@ -123,6 +126,9 @@ def ffmpeg_api(job_id, data):
                 os.remove(output_filename)  # Clean up local output file after upload
             else:
                 raise Exception(f"Expected output file {output_filename} not found")
+
+        from services.webhook import trigger_webhook
+        trigger_webhook(webhook_url, record_id, output_urls)
 
         return output_urls, "/v1/ffmpeg/compose", 200
         

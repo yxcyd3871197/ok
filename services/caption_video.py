@@ -1,4 +1,5 @@
 import os
+import platform
 import ffmpeg
 import logging
 import requests
@@ -13,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define the path to the fonts directory
-FONTS_DIR = '/usr/share/fonts/custom'
+FONTS_DIR = 'fonts'  # Relative path to the fonts directory
 
 # Create the FONT_PATHS dictionary by reading the fonts directory
 FONT_PATHS = {}
@@ -56,7 +57,8 @@ def match_fonts():
     except Exception as e:
         logger.error(f"Exception while matching fonts: {str(e)}")
 
-match_fonts()
+if platform.system() != "Windows":
+    match_fonts()
 
 def generate_style_line(options):
     """Generate ASS style line from options."""

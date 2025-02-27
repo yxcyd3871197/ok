@@ -1,6 +1,6 @@
 from flask import Flask, request
 from queue import Queue
-from services.webhook import send_webhook
+from services.webhook import trigger_webhook
 import threading
 import uuid
 import os
@@ -43,7 +43,7 @@ def create_app():
                 "build_number": BUILD_NUMBER  # Add build number to response
             }
 
-            send_webhook(data.get("webhook_url"), response_data)
+            trigger_webhook(data.get("webhook_url"), data.get("id"), response_data)
 
             task_queue.task_done()
 

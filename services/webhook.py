@@ -1,14 +1,27 @@
 import requests
+import json
 import logging
 
 logger = logging.getLogger(__name__)
 
-def send_webhook(webhook_url, data):
-    """Send a POST request to a webhook URL with the provided data."""
+def trigger_webhook(webhook_url, record_id, data):
+    """
+    Triggers a webhook with the given URL, record ID, and data.
+    """
+    if not webhook_url:
+        logger.warning("Webhook URL is not provided. Skipping webhook trigger.")
+        return
+
+    payload = {
+        "record_id": record_id,
+        "data": data
+    }
+
+    headers = {'Content-type': 'application/json'}
+
     try:
-        logger.info(f"Attempting to send webhook to {webhook_url} with data: {data}")
-        response = requests.post(webhook_url, json=data)
-        response.raise_for_status()
-        logger.info(f"Webhook sent: {data}")
-    except requests.RequestException as e:
-        logger.error(f"Webhook failed: {e}")
+        response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+        logger.info(f"Webhook triggered successfully. Status code: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to trigger webhook: {e}")
